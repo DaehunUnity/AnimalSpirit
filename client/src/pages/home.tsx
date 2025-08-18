@@ -17,23 +17,28 @@ export default function Home() {
     <main className="max-w-4xl mx-auto px-4 py-8">
       <section className="text-center mb-8">
         <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 mb-8">
-          <img 
-            src="https://images.unsplash.com/photo-1574158622682-e40e69881006?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400" 
-            alt="Various animals together in harmony" 
+          <img
+            src="https://images.unsplash.com/photo-1574158622682-e40e69881006?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400"
+            alt="Various animals together in harmony"
             className="rounded-xl w-full h-64 object-cover mb-8"
           />
-          
+
           <h2 className="text-4xl md:text-5xl font-poppins font-bold text-dark-blue mb-4">
-            {language === 'ko' ? (
-              <>어떤 동물과 <span className="text-coral">가장 닮았나요?</span></>
+            {language === "ko" ? (
+              <>
+                어떤 동물과 <span className="text-coral">가장 닮았나요?</span>
+              </>
             ) : (
-              <>What animal are you <span className="text-coral">most like?</span></>
+              <>
+                What animal are you{" "}
+                <span className="text-coral">most like?</span>
+              </>
             )}
           </h2>
           <p className="text-lg text-gray-text mb-8 max-w-2xl mx-auto">
             {t.heroSubtitle}
           </p>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-coral to-pink rounded-full flex items-center justify-center mx-auto mb-2">
@@ -51,7 +56,9 @@ export default function Home() {
               <div className="w-16 h-16 bg-gradient-to-r from-mint to-golden rounded-full flex items-center justify-center mx-auto mb-2">
                 <Share className="text-white text-2xl" />
               </div>
-              <p className="text-sm font-medium text-dark-blue">{t.easySharing}</p>
+              <p className="text-sm font-medium text-dark-blue">
+                {t.easySharing}
+              </p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-golden to-coral rounded-full flex items-center justify-center mx-auto mb-2">
@@ -61,7 +68,7 @@ export default function Home() {
             </div>
           </div>
 
-          <Button 
+          <Button
             onClick={handleStartQuiz}
             className="bg-gradient-to-r from-coral to-teal text-white font-poppins font-semibold text-lg px-8 py-4 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
           >
@@ -87,13 +94,14 @@ export default function Home() {
                 <div className="w-8 h-8 bg-gradient-to-r from-coral to-teal rounded-lg flex items-center justify-center">
                   <Heart className="text-white h-4 w-4" />
                 </div>
-                <span className="font-poppins font-bold text-lg">{t.appTitle}</span>
+                <span className="font-poppins font-bold text-lg">
+                  {t.appTitle}
+                </span>
               </div>
               <p className="text-gray-300 text-sm">
-                {language === 'ko' 
-                  ? '재미있고 정확한 성격 테스트로 당신의 정신적 동물을 발견하세요. 결과를 공유하고 동물 성격을 통해 친구들과 소통하세요.'
-                  : 'Discover your spirit animal with our fun and accurate personality test. Share your results and connect with friends through animal personalities.'
-                }
+                {language === "ko"
+                  ? "재미있고 정확한 성격 테스트로 당신의 정신적 동물을 발견하세요. 결과를 공유하고 동물 성격을 통해 친구들과 소통하세요."
+                  : "Discover your spirit animal with our fun and accurate personality test. Share your results and connect with friends through animal personalities."}
               </p>
             </div>
 
@@ -105,7 +113,10 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-gray-600 pt-8 mt-8 text-center text-sm text-gray-300">
-            <p>&copy; 2024 {t.appTitle}. {language === 'ko' ? '모든 권리 보유.' : 'All rights reserved.'}</p>
+            <p>
+              &copy; 2025 {t.appTitle}.{" "}
+              {language === "ko" ? "모든 권리 보유." : "All rights reserved."}
+            </p>
           </div>
         </div>
       </footer>
