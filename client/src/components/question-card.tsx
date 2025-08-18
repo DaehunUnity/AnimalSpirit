@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
+import { useLanguage } from "@/contexts/language-context";
+import { useTranslation } from "@/lib/translations";
 import type { Question, QuizOption } from "@shared/schema";
 
 interface QuestionCardProps {
@@ -26,6 +28,12 @@ export default function QuestionCard({
   canGoNext,
   canGoPrevious
 }: QuestionCardProps) {
+  const { language } = useLanguage();
+  const t = useTranslation(language);
+  
+  // Get localized question and options
+  const questionKey = `q${questionNumber}` as keyof typeof t.questions;
+  const localizedQuestion = t.questions[questionKey];
   return (
     <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
       <div className="text-center mb-8">
@@ -33,7 +41,7 @@ export default function QuestionCard({
           <HelpCircle className="text-white text-3xl" />
         </div>
         <h3 className="text-2xl font-poppins font-bold text-dark-blue mb-4">
-          {question.question}
+          {localizedQuestion?.question || question.question}
         </h3>
       </div>
 
@@ -54,7 +62,9 @@ export default function QuestionCard({
                   ? 'bg-coral border-coral'
                   : 'border-gray-300'
               }`} />
-              <span className="font-medium text-dark-blue">{option.text}</span>
+              <span className="font-medium text-dark-blue">
+                {localizedQuestion?.options[index] || option.text}
+              </span>
             </div>
           </button>
         ))}
@@ -68,14 +78,14 @@ export default function QuestionCard({
           className="px-6 py-3"
         >
           <ChevronLeft className="mr-2 h-4 w-4" />
-          Previous
+          {t.previous}
         </Button>
         <Button
           onClick={onNext}
           disabled={!canGoNext}
           className="px-6 py-3 bg-gradient-to-r from-coral to-teal hover:shadow-lg"
         >
-          {questionNumber === totalQuestions ? 'See Results' : 'Next'}
+          {questionNumber === totalQuestions ? t.seeResults : t.next}
           <ChevronRight className="ml-2 h-4 w-4" />
         </Button>
       </div>

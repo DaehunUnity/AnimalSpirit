@@ -5,11 +5,15 @@ import ProgressBar from "@/components/progress-bar";
 import QuestionCard from "@/components/question-card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { useLanguage } from "@/contexts/language-context";
+import { useTranslation } from "@/lib/translations";
 import type { Question, QuizAnswer } from "@shared/schema";
 
 export default function Quiz() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { language } = useLanguage();
+  const t = useTranslation(language);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
@@ -28,8 +32,8 @@ export default function Quiz() {
     },
     onError: (error) => {
       toast({
-        title: "Error",
-        description: "Failed to calculate your result. Please try again.",
+        title: language === 'ko' ? "오류" : "Error",
+        description: language === 'ko' ? "결과 계산에 실패했습니다. 다시 시도해주세요." : "Failed to calculate your result. Please try again.",
         variant: "destructive",
       });
     },
@@ -80,7 +84,7 @@ export default function Quiz() {
             <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
             <div className="h-8 bg-gray-200 rounded"></div>
           </div>
-          <p className="text-gray-text mt-4">Loading questions...</p>
+          <p className="text-gray-text mt-4">{t.loadingQuestions}</p>
         </div>
       </main>
     );
@@ -90,7 +94,7 @@ export default function Quiz() {
     return (
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-          <p className="text-red-500">Failed to load quiz questions. Please try again later.</p>
+          <p className="text-red-500">{language === 'ko' ? '퀴즈 질문을 불러올 수 없습니다. 나중에 다시 시도해주세요.' : 'Failed to load quiz questions. Please try again later.'}</p>
         </div>
       </main>
     );
@@ -117,7 +121,7 @@ export default function Quiz() {
       {calculateMutation.isPending && (
         <div className="bg-white rounded-xl p-6 text-center shadow-lg">
           <div className="animate-pulse">
-            <p className="text-gray-text">Calculating your perfect animal match...</p>
+            <p className="text-gray-text">{t.calculatingMatch}</p>
           </div>
         </div>
       )}

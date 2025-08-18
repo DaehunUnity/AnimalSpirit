@@ -6,9 +6,9 @@ export function calculateAnimalMatch(answers: QuizAnswer[], questions: Question[
   
   for (const answer of answers) {
     const question = questions.find(q => q.id === answer.questionId);
-    if (!question || !question.options[answer.optionIndex]) continue;
+    if (!question || !(question.options as any[])[answer.optionIndex]) continue;
     
-    const selectedOption = question.options[answer.optionIndex] as any;
+    const selectedOption = (question.options as any[])[answer.optionIndex];
     const traits = selectedOption.traits || {};
     
     for (const [trait, score] of Object.entries(traits)) {

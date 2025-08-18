@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Facebook, Twitter, Link, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/language-context";
+import { useTranslation } from "@/lib/translations";
 import type { Animal } from "@shared/schema";
 
 interface ShareButtonsProps {
@@ -9,8 +11,16 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({ animal }: ShareButtonsProps) {
   const { toast } = useToast();
-
-  const shareText = `I just discovered I'm a ${animal.name} - ${animal.subtitle}! Take this fun animal personality test to find your spirit animal! 🐾`;
+  const { language } = useLanguage();
+  const t = useTranslation(language);
+  
+  // Get localized animal data
+  const animalKey = animal.name.toLowerCase() as keyof typeof t.animals;
+  const localizedAnimal = t.animals[animalKey];
+  
+  const shareText = language === 'ko' 
+    ? `저는 ${localizedAnimal?.name || animal.name} - ${localizedAnimal?.subtitle || animal.subtitle}라는 결과가 나왔어요! 이 재미있는 동물 성격 테스트로 당신의 정신적 동물을 찾아보세요! 🐾`
+    : `I just discovered I'm a ${localizedAnimal?.name || animal.name} - ${localizedAnimal?.subtitle || animal.subtitle}! Take this fun animal personality test to find your spirit animal! 🐾`;
   const currentUrl = window.location.href;
 
   const handleFacebookShare = () => {
@@ -27,13 +37,13 @@ export default function ShareButtons({ animal }: ShareButtonsProps) {
     try {
       await navigator.clipboard.writeText(currentUrl);
       toast({
-        title: "Link copied!",
-        description: "The link has been copied to your clipboard.",
+        title: t.linkCopied,
+        description: t.linkCopiedDesc,
       });
     } catch (error) {
       toast({
-        title: "Failed to copy",
-        description: "Unable to copy link to clipboard.",
+        title: t.failedToCopy,
+        description: t.failedToCopyDesc,
         variant: "destructive",
       });
     }
@@ -51,7 +61,7 @@ export default function ShareButtons({ animal }: ShareButtonsProps) {
         className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full"
       >
         <Facebook className="h-4 w-4" />
-        <span>Facebook</span>
+        <span>{t.facebook}</span>
       </Button>
       
       <Button
@@ -59,7 +69,7 @@ export default function ShareButtons({ animal }: ShareButtonsProps) {
         className="flex items-center space-x-2 bg-blue-400 hover:bg-blue-500 text-white px-4 py-2 rounded-full"
       >
         <Twitter className="h-4 w-4" />
-        <span>Twitter</span>
+        <span>{t.twitter}</span>
       </Button>
       
       <Button
@@ -67,7 +77,7 @@ export default function ShareButtons({ animal }: ShareButtonsProps) {
         className="flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full"
       >
         <MessageCircle className="h-4 w-4" />
-        <span>WhatsApp</span>
+        <span>{t.whatsapp}</span>
       </Button>
       
       <Button
@@ -76,7 +86,7 @@ export default function ShareButtons({ animal }: ShareButtonsProps) {
         className="flex items-center space-x-2 px-4 py-2 rounded-full"
       >
         <Link className="h-4 w-4" />
-        <span>Copy Link</span>
+        <span>{t.copyLink}</span>
       </Button>
     </div>
   );

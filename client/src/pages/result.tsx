@@ -2,10 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "wouter";
 import ResultCard from "@/components/result-card";
 import AnimalPreview from "@/components/animal-preview";
+import { useLanguage } from "@/contexts/language-context";
+import { useTranslation } from "@/lib/translations";
 import type { Animal } from "@shared/schema";
 
 export default function Result() {
   const { animalId } = useParams();
+  const { language } = useLanguage();
+  const t = useTranslation(language);
 
   const { data: animal, isLoading: isLoadingAnimal } = useQuery<Animal>({
     queryKey: ["/api/animals", animalId],
@@ -25,7 +29,7 @@ export default function Result() {
             <div className="h-8 bg-gray-200 rounded w-1/2 mx-auto"></div>
             <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
           </div>
-          <p className="text-gray-text mt-4">Loading your results...</p>
+          <p className="text-gray-text mt-4">{language === 'ko' ? '결과를 불러오는 중...' : 'Loading your results...'}</p>
         </div>
       </main>
     );
@@ -35,7 +39,7 @@ export default function Result() {
     return (
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-          <p className="text-red-500">Animal not found. Please take the quiz again.</p>
+          <p className="text-red-500">{language === 'ko' ? '동물을 찾을 수 없습니다. 퀴즈를 다시 시도해주세요.' : 'Animal not found. Please take the quiz again.'}</p>
         </div>
       </main>
     );

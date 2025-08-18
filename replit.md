@@ -2,9 +2,12 @@
 
 This is a React-based Animal Personality Test application that helps users discover their "spirit animal" through a quiz-based personality assessment. The application features a modern, user-friendly interface with colorful gradients and smooth animations. Users take a 10-question quiz and receive personalized results showing which animal best matches their personality traits, along with detailed descriptions and sharing capabilities.
 
+**Language Support**: The application supports Korean (default) and English with a language selector in the top-right corner. All content including questions, animal descriptions, and UI text is fully localized.
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
+Default language: Korean (한국어) with English language switching capability.
 
 # System Architecture
 
@@ -15,6 +18,7 @@ Preferred communication style: Simple, everyday language.
 - **State Management**: TanStack Query (React Query) for server state management
 - **Routing**: Wouter for lightweight client-side routing
 - **Form Handling**: React Hook Form with Zod validation
+- **Internationalization**: Custom translation system with React Context for language switching (Korean/English)
 
 ## Backend Architecture
 - **Runtime**: Node.js with Express.js server
@@ -40,6 +44,8 @@ Preferred communication style: Simple, everyday language.
 - **Pages**: Home (landing), Quiz (interactive assessment), Result (personalized outcome)
 - **Shared Components**: Progress tracking, question cards, result displays, social sharing
 - **UI Components**: Comprehensive component library with consistent theming
+- **Language Components**: Language selector dropdown, translation context provider
+- **Localization**: Full Korean and English translations for all UI text, questions, and animal descriptions
 
 ## Development Features
 - **Hot Reload**: Vite HMR for fast development iteration

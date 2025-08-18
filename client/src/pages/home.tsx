@@ -1,9 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Play, Clock, Users, Share, Heart } from "lucide-react";
 import { useLocation } from "wouter";
+import { useLanguage } from "@/contexts/language-context";
+import { useTranslation } from "@/lib/translations";
 
 export default function Home() {
   const [, setLocation] = useLocation();
+  const { language } = useLanguage();
+  const t = useTranslation(language);
 
   const handleStartQuiz = () => {
     setLocation("/quiz");
@@ -20,11 +24,14 @@ export default function Home() {
           />
           
           <h2 className="text-4xl md:text-5xl font-poppins font-bold text-dark-blue mb-4">
-            What animal are you <span className="text-coral">most like?</span>
+            {language === 'ko' ? (
+              <>어떤 동물과 <span className="text-coral">가장 닮았나요?</span></>
+            ) : (
+              <>What animal are you <span className="text-coral">most like?</span></>
+            )}
           </h2>
           <p className="text-lg text-gray-text mb-8 max-w-2xl mx-auto">
-            Discover your spirit animal with 10 simple questions. Get accurate, fun results 
-            that reveal your personality traits and share them with friends!
+            {t.heroSubtitle}
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -32,25 +39,25 @@ export default function Home() {
               <div className="w-16 h-16 bg-gradient-to-r from-coral to-pink rounded-full flex items-center justify-center mx-auto mb-2">
                 <Clock className="text-white text-2xl" />
               </div>
-              <p className="text-sm font-medium text-dark-blue">3 minutes</p>
+              <p className="text-sm font-medium text-dark-blue">{t.minutes}</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-teal to-sky rounded-full flex items-center justify-center mx-auto mb-2">
                 <Users className="text-white text-2xl" />
               </div>
-              <p className="text-sm font-medium text-dark-blue">142k+ taken</p>
+              <p className="text-sm font-medium text-dark-blue">{t.taken}</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-mint to-golden rounded-full flex items-center justify-center mx-auto mb-2">
                 <Share className="text-white text-2xl" />
               </div>
-              <p className="text-sm font-medium text-dark-blue">Easy sharing</p>
+              <p className="text-sm font-medium text-dark-blue">{t.easySharing}</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-golden to-coral rounded-full flex items-center justify-center mx-auto mb-2">
                 <Heart className="text-white text-2xl" />
               </div>
-              <p className="text-sm font-medium text-dark-blue">Free test</p>
+              <p className="text-sm font-medium text-dark-blue">{t.freeTest}</p>
             </div>
           </div>
 
@@ -59,7 +66,7 @@ export default function Home() {
             className="bg-gradient-to-r from-coral to-teal text-white font-poppins font-semibold text-lg px-8 py-4 rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300"
           >
             <Play className="mr-2 h-5 w-5" />
-            Start Test
+            {t.startTest}
           </Button>
         </div>
 
