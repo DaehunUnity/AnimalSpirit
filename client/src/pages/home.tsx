@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Play, Clock, Users, Share, Heart } from "lucide-react";
-import { useLocation } from "wouter";
 import { useLanguage } from "@/contexts/language-context";
 import { useTranslation } from "@/lib/translations";
+import { Clock, Heart, Play, Share, Users } from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function Home() {
   const [, setLocation] = useLocation();
@@ -108,7 +108,7 @@ export default function Home() {
             <div>
               <h5 className="font-semibold mb-4">{t.contactUs}</h5>
               <div className="space-y-2 text-sm text-gray-300">
-                <p>📧 contact@animaltest.com</p>
+                <p>📧 kimtrue38@gmail.com</p>
               </div>
             </div>
           </div>
