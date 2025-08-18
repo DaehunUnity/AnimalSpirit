@@ -81,43 +81,31 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-dark-blue text-white py-12 mt-16 rounded-2xl">
         <div className="max-w-4xl mx-auto px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-8 h-8 bg-gradient-to-r from-coral to-teal rounded-lg flex items-center justify-center">
                   <Heart className="text-white h-4 w-4" />
                 </div>
-                <span className="font-poppins font-bold text-lg">Animal Personality Test</span>
+                <span className="font-poppins font-bold text-lg">{t.appTitle}</span>
               </div>
               <p className="text-gray-300 text-sm">
-                Discover your spirit animal with our fun and accurate personality test. 
-                Share your results and connect with friends through animal personalities.
+                {language === 'ko' 
+                  ? '재미있고 정확한 성격 테스트로 당신의 정신적 동물을 발견하세요. 결과를 공유하고 동물 성격을 통해 친구들과 소통하세요.'
+                  : 'Discover your spirit animal with our fun and accurate personality test. Share your results and connect with friends through animal personalities.'
+                }
               </p>
             </div>
+
             <div>
-              <h5 className="font-semibold mb-4">Popular Tests</h5>
-              <ul className="space-y-2 text-sm text-gray-300">
-                <li><a href="#" className="hover:text-coral transition-colors">Animal Personality Test</a></li>
-                <li><a href="#" className="hover:text-coral transition-colors">Color Psychology Test</a></li>
-                <li><a href="#" className="hover:text-coral transition-colors">Career Aptitude Test</a></li>
-                <li><a href="#" className="hover:text-coral transition-colors">Love Language Test</a></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-semibold mb-4">Contact Us</h5>
+              <h5 className="font-semibold mb-4">{t.contactUs}</h5>
               <div className="space-y-2 text-sm text-gray-300">
                 <p>📧 contact@animaltest.com</p>
-                <p>📞 (555) 123-4567</p>
-                <div className="flex space-x-4 mt-4">
-                  <a href="#" className="text-gray-300 hover:text-coral transition-colors">📘</a>
-                  <a href="#" className="text-gray-300 hover:text-coral transition-colors">📷</a>
-                  <a href="#" className="text-gray-300 hover:text-coral transition-colors">📺</a>
-                </div>
               </div>
             </div>
           </div>
           <div className="border-t border-gray-600 pt-8 mt-8 text-center text-sm text-gray-300">
-            <p>&copy; 2024 Animal Personality Test. All rights reserved. | Privacy Policy | Terms of Service</p>
+            <p>&copy; 2024 {t.appTitle}. {language === 'ko' ? '모든 권리 보유.' : 'All rights reserved.'}</p>
           </div>
         </div>
       </footer>

@@ -38,11 +38,16 @@ export default function ResultCard({ animal, matchScore }: ResultCardProps) {
 
         {/* Result Animal Display */}
         <div className="bg-gradient-to-r from-coral to-teal rounded-2xl p-8 text-white mb-8">
-          <img 
-            src={animal.imageUrl} 
-            alt={animal.name}
-            className="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-white object-cover"
-          />
+          <div className="w-32 h-32 rounded-full mx-auto mb-6 border-4 border-white bg-white flex items-center justify-center text-6xl">
+            {animal.name === 'Lion' && '🦁'}
+            {animal.name === 'Dolphin' && '🐬'}
+            {animal.name === 'Owl' && '🦉'}
+            {animal.name === 'Fox' && '🦊'}
+            {animal.name === 'Eagle' && '🦅'}
+            {animal.name === 'Panda' && '🐼'}
+            {animal.name === 'Cat' && '🐱'}
+            {animal.name === 'Wolf' && '🐺'}
+          </div>
           
           <h3 className="text-4xl font-poppins font-bold mb-2">{localizedAnimal?.name || animal.name}</h3>
           <p className="text-xl opacity-90 mb-4">{localizedAnimal?.subtitle || animal.subtitle}</p>
