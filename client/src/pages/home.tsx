@@ -2,16 +2,25 @@ import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/language-context";
 import { useTranslation } from "@/lib/translations";
 import { Clock, Heart, Play, Share, Users } from "lucide-react";
-import { useLocation } from "wouter";
+import { useState } from "react";
+import Quiz from "./quiz";
 
 export default function Home() {
-  const [, setLocation] = useLocation();
   const { language } = useLanguage();
   const t = useTranslation(language);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   const handleStartQuiz = () => {
-    setLocation("/quiz");
+    setShowQuiz(true);
   };
+
+  if (showQuiz) {
+    return (
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        <Quiz />
+      </main>
+    );
+  }
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
@@ -75,13 +84,6 @@ export default function Home() {
             <Play className="mr-2 h-5 w-5" />
             {t.startTest}
           </Button>
-        </div>
-
-        {/* Ad Space */}
-        <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-6 mb-8">
-          <p className="text-gray-500 text-center">
-            <span className="text-xs">Advertisement Space (728x90)</span>
-          </p>
         </div>
       </section>
 

@@ -1,22 +1,24 @@
-import { useState, useEffect } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { useLocation } from "wouter";
 import ProgressBar from "@/components/progress-bar";
 import QuestionCard from "@/components/question-card";
+import { useLanguage } from "@/contexts/language-context";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { useLanguage } from "@/contexts/language-context";
 import { useTranslation } from "@/lib/translations";
 import type { Question, QuizAnswer } from "@shared/schema";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import Result from "./result";
 
 export default function Quiz() {
-  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { language } = useLanguage();
   const t = useTranslation(language);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [quizResult, setQuizResult] = useState<{
+    animal: { id: string };
+  } | null>(null);
 
   const { data: questions, isLoading } = useQuery<Question[]>({
     queryKey: ["/api/questions"],
@@ -24,16 +26,21 @@ export default function Quiz() {
 
   const calculateMutation = useMutation({
     mutationFn: async (quizAnswers: QuizAnswer[]) => {
-      const response = await apiRequest("POST", "/api/calculate-match", { answers: quizAnswers });
+      const response = await apiRequest("POST", "/api/calculate-match", {
+        answers: quizAnswers,
+      });
       return response.json();
     },
     onSuccess: (data) => {
-      setLocation(`/result/${data.animal.id}`);
+      setQuizResult(data);
     },
     onError: (error) => {
       toast({
-        title: language === 'ko' ? "오류" : "Error",
-        description: language === 'ko' ? "결과 계산에 실패했습니다. 다시 시도해주세요." : "Failed to calculate your result. Please try again.",
+        title: language === "ko" ? "오류" : "Error",
+        description:
+          language === "ko"
+            ? "결과 계산에 실패했습니다. 다시 시도해주세요."
+            : "Failed to calculate your result. Please try again.",
         variant: "destructive",
       });
     },
@@ -42,18 +49,20 @@ export default function Quiz() {
   // Load saved answer for current question
   useEffect(() => {
     if (questions && questions[currentQuestion]) {
-      const existingAnswer = answers.find(a => a.questionId === questions[currentQuestion].id);
+      const existingAnswer = answers.find(
+        (a) => a.questionId === questions[currentQuestion].id
+      );
       setSelectedOption(existingAnswer ? existingAnswer.optionIndex : null);
     }
   }, [currentQuestion, answers, questions]);
 
   const handleOptionSelect = (optionIndex: number) => {
     if (!questions) return;
-    
+
     const questionId = questions[currentQuestion].id;
-    const newAnswers = answers.filter(a => a.questionId !== questionId);
+    const newAnswers = answers.filter((a) => a.questionId !== questionId);
     newAnswers.push({ questionId, optionIndex });
-    
+
     setAnswers(newAnswers);
     setSelectedOption(optionIndex);
   };
@@ -65,15 +74,20 @@ export default function Quiz() {
       // Submit quiz
       calculateMutation.mutate(answers);
     } else {
-      setCurrentQuestion(prev => prev + 1);
+      setCurrentQuestion((prev) => prev + 1);
     }
   };
 
   const handlePrevious = () => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(prev => prev - 1);
+      setCurrentQuestion((prev) => prev - 1);
     }
   };
+
+  // Show result if quiz is completed
+  if (quizResult) {
+    return <Result animalId={quizResult.animal.id} />;
+  }
 
   if (isLoading) {
     return (
@@ -94,7 +108,11 @@ export default function Quiz() {
     return (
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-          <p className="text-red-500">{language === 'ko' ? '퀴즈 질문을 불러올 수 없습니다. 나중에 다시 시도해주세요.' : 'Failed to load quiz questions. Please try again later.'}</p>
+          <p className="text-red-500">
+            {language === "ko"
+              ? "퀴즈 질문을 불러올 수 없습니다. 나중에 다시 시도해주세요."
+              : "Failed to load quiz questions. Please try again later."}
+          </p>
         </div>
       </main>
     );
@@ -105,7 +123,7 @@ export default function Quiz() {
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
       <ProgressBar current={currentQuestion + 1} total={questions.length} />
-      
+
       <QuestionCard
         question={currentQuestionData}
         questionNumber={currentQuestion + 1}
@@ -125,13 +143,6 @@ export default function Quiz() {
           </div>
         </div>
       )}
-
-      {/* Ad Space */}
-      <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center mt-8">
-        <p className="text-gray-500">
-          <span className="text-xs">Advertisement Space (300x250)</span>
-        </p>
-      </div>
     </main>
   );
 }
