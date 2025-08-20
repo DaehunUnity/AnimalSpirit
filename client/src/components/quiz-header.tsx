@@ -24,42 +24,42 @@ export default function QuizHeader() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-6">
-            <nav className="flex items-center space-x-4">
+          <div className="hidden xl:flex items-center space-x-4">
+            <nav className="flex items-center space-x-3">
               <Link href="/about">
-                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer">
+                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer text-sm">
                   {language === "ko" ? "소개" : "About"}
                 </span>
               </Link>
               <Link href="/careers">
-                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer">
-                  {language === "ko" ? "직업가이드" : "Careers"}
+                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer text-sm">
+                  {language === "ko" ? "직업" : "Career"}
                 </span>
               </Link>
               <Link href="/science">
-                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer">
-                  {language === "ko" ? "과학적근거" : "Science"}
+                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer text-sm">
+                  {language === "ko" ? "과학" : "Science"}
                 </span>
               </Link>
               <Link href="/faq">
-                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer">
-                  {language === "ko" ? "FAQ" : "FAQ"}
+                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer text-sm">
+                  FAQ
                 </span>
               </Link>
               <Link href="/contact">
-                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer">
+                <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer text-sm">
                   {language === "ko" ? "문의" : "Contact"}
                 </span>
               </Link>
             </nav>
-            <div className="hidden md:flex items-center">
-              <span className="text-sm text-gray-text">{language === 'ko' ? '14만명 이상이' : 'Over'} <span className="font-semibold text-coral">142,543</span>{language === 'ko' ? '명이 이 테스트를 받았습니다!' : ' people have taken this test!'}</span>
+            <div className="hidden 2xl:flex items-center">
+              <span className="text-xs text-gray-text">{language === 'ko' ? '14만+' : 'Over'} <span className="font-semibold text-coral">142k</span> {language === 'ko' ? '참여' : 'users'}</span>
             </div>
             <LanguageSelector />
           </div>
 
           {/* Mobile Navigation */}
-          <div className="lg:hidden flex items-center space-x-2">
+          <div className="xl:hidden flex items-center space-x-2">
             <LanguageSelector />
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -72,7 +72,7 @@ export default function QuizHeader() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="lg:hidden mt-4 pb-4 border-t border-gray-200">
+          <div className="xl:hidden mt-4 pb-4 border-t border-gray-200">
             <nav className="flex flex-col space-y-3 mt-4">
               <Link href="/about">
                 <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer">
@@ -81,12 +81,12 @@ export default function QuizHeader() {
               </Link>
               <Link href="/careers">
                 <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer">
-                  {language === "ko" ? "직업가이드" : "Careers"}
+                  {language === "ko" ? "직업 가이드" : "Careers"}
                 </span>
               </Link>
               <Link href="/science">
                 <span className="text-gray-text hover:text-dark-blue transition-colors cursor-pointer">
-                  {language === "ko" ? "과학적근거" : "Science"}
+                  {language === "ko" ? "과학적 근거" : "Science"}
                 </span>
               </Link>
               <Link href="/faq">
@@ -100,7 +100,7 @@ export default function QuizHeader() {
                 </span>
               </Link>
               <div className="pt-2">
-                <span className="text-sm text-gray-text">{language === 'ko' ? '14만명 이상' : 'Over'} <span className="font-semibold text-coral">142,543</span> {language === 'ko' ? '명 참여' : 'taken'}</span>
+                <span className="text-sm text-gray-text">{language === 'ko' ? '14만+ 명 참여' : 'Over 142k users'}</span>
               </div>
             </nav>
           </div>
