@@ -3,6 +3,7 @@ import { useLanguage } from "@/contexts/language-context";
 import { useTranslation } from "@/lib/translations";
 import { Clock, Heart, Play, Share, Users } from "lucide-react";
 import { useState } from "react";
+import { Link } from "wouter";
 import Quiz from "./quiz";
 
 export default function Home() {
@@ -107,10 +108,67 @@ export default function Home() {
               </p>
             </div>
 
-            <div>
-              <h5 className="font-semibold mb-4">{t.contactUs}</h5>
-              <div className="space-y-2 text-sm text-gray-300">
-                <p>📧 kimtrue38@gmail.com</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h5 className="font-semibold mb-4">{language === "ko" ? "주요 페이지" : "Main Pages"}</h5>
+                <div className="space-y-2 text-sm text-gray-300">
+                  <div>
+                    <Link href="/about">
+                      <span className="hover:text-white transition-colors cursor-pointer">
+                        {language === "ko" ? "서비스 소개" : "About Us"}
+                      </span>
+                    </Link>
+                  </div>
+                  <div>
+                    <Link href="/careers">
+                      <span className="hover:text-white transition-colors cursor-pointer">
+                        {language === "ko" ? "직업 가이드" : "Career Guide"}
+                      </span>
+                    </Link>
+                  </div>
+                  <div>
+                    <Link href="/science">
+                      <span className="hover:text-white transition-colors cursor-pointer">
+                        {language === "ko" ? "과학적 근거" : "Scientific Basis"}
+                      </span>
+                    </Link>
+                  </div>
+                  <div>
+                    <Link href="/faq">
+                      <span className="hover:text-white transition-colors cursor-pointer">
+                        {language === "ko" ? "자주 묻는 질문" : "FAQ"}
+                      </span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h5 className="font-semibold mb-4">{language === "ko" ? "법적 정보" : "Legal Info"}</h5>
+                <div className="space-y-2 text-sm text-gray-300">
+                  <div>
+                    <Link href="/privacy-policy">
+                      <span className="hover:text-white transition-colors cursor-pointer">
+                        {language === "ko" ? "개인정보 처리방침" : "Privacy Policy"}
+                      </span>
+                    </Link>
+                  </div>
+                  <div>
+                    <Link href="/terms-of-service">
+                      <span className="hover:text-white transition-colors cursor-pointer">
+                        {language === "ko" ? "이용약관" : "Terms of Service"}
+                      </span>
+                    </Link>
+                  </div>
+                  <div>
+                    <Link href="/contact">
+                      <span className="hover:text-white transition-colors cursor-pointer">
+                        {language === "ko" ? "문의하기" : "Contact"}
+                      </span>
+                    </Link>
+                  </div>
+                  <p className="pt-2">📧 kimtrue38@gmail.com</p>
+                </div>
               </div>
             </div>
           </div>
