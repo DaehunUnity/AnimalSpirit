@@ -1,6 +1,6 @@
 import { useLanguage } from "@/contexts/language-context";
 import { useTranslation } from "@/lib/translations";
-import { Leaf, Peace, Users, Zap, Heart, TrendingUp } from "lucide-react";
+import { Leaf, Smile, Users, Zap, Heart, TrendingUp } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 
@@ -68,7 +68,7 @@ export default function PandaGuide() {
           {/* Personality Overview */}
           <section className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center mb-4">
-              <Peace className="text-green-600 mr-3 h-6 w-6" />
+              <Smile className="text-green-600 mr-3 h-6 w-6" />
               <h3 className="text-2xl font-bold text-gray-800">
                 {language === "ko" ? "성격 분석" : "Personality Analysis"}
               </h3>
