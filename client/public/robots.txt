@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://animal-spirit-test.netlify.app/sitemap.xml
+
+# AdSense
+User-agent: Mediapartners-Google
+Allow: /
+
+# Block common bot paths
+User-agent: *
+Disallow: /api/
+Disallow: /.netlify/
+Disallow: /node_modules/
