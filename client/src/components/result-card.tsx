@@ -147,16 +147,31 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
           </div>
 
           {/* Personality Breakdown */}
-          {breakdown && Array.isArray(breakdown) && breakdown.length > 0 ? (
-            <div>
-              <h4 className="text-xl font-poppins font-semibold text-dark-blue mb-3 flex items-center">
-                🧬 {language === "ko" ? "성격 분석" : "Personality Analysis"}
-              </h4>
+          <div>
+            <h4 className="text-xl font-poppins font-semibold text-dark-blue mb-3 flex items-center">
+              🧬 {language === "ko" ? "성격 분석" : "Personality Analysis"}
+            </h4>
+            
+            {/* Always show debug info first */}
+            <div className="bg-blue-100 border p-4 rounded mb-4 text-sm">
+              <p><strong>Debug - Netlify Check:</strong></p>
+              <p>Breakdown prop exists: {breakdown ? 'YES' : 'NO'}</p>
+              <p>Breakdown type: {typeof breakdown}</p>
+              <p>Is Array: {Array.isArray(breakdown) ? 'YES' : 'NO'}</p>
+              <p>Length: {breakdown ? (Array.isArray(breakdown) ? breakdown.length : 'not array') : 'null/undefined'}</p>
+              <p>Raw breakdown: {JSON.stringify(breakdown)}</p>
+            </div>
+            
+            {breakdown && Array.isArray(breakdown) && breakdown.length > 0 ? (
               <div className="space-y-3">
                 {breakdown.map((item, index) => {
                   if (!item || !item.animal || !item.animal.name) {
                     console.warn('Invalid breakdown item:', item);
-                    return null;
+                    return (
+                      <div key={index} className="text-red-500 text-sm">
+                        Invalid data: {JSON.stringify(item)}
+                      </div>
+                    );
                   }
                   
                   const animalKey = item.animal.name.toLowerCase() as keyof typeof t.animals;
@@ -200,13 +215,16 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
                   );
                 })}
               </div>
-            </div>
-          ) : (
-            <div style={{ display: 'none' }}>
-              {/* Hidden fallback for debugging */}
-              <p>Breakdown data: {JSON.stringify(breakdown)}</p>
-            </div>
-          )}
+            ) : (
+              <div className="text-red-500 text-sm border p-4 rounded">
+                <p><strong>Debug Info:</strong></p>
+                <p>Breakdown exists: {breakdown ? 'Yes' : 'No'}</p>
+                <p>Is Array: {Array.isArray(breakdown) ? 'Yes' : 'No'}</p>
+                <p>Length: {breakdown?.length || 'undefined'}</p>
+                <p>Data: {JSON.stringify(breakdown, null, 2)}</p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Sharing Section */}

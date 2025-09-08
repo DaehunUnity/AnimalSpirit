@@ -74,6 +74,10 @@ export default function Result({ animalId: propAnimalId, quizResult, onRestartQu
 
   const otherAnimals = allAnimals?.filter((a) => a.id !== animal.id) || [];
 
+  // Debug logging for Result page
+  console.log('Result page - quizResult:', quizResult);
+  console.log('Result page - breakdown from quizResult:', quizResult?.breakdown);
+
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
       <ResultCard 

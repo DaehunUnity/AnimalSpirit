@@ -36,6 +36,8 @@ export default function Quiz({ onRestartQuiz }: QuizProps) {
       return response.json();
     },
     onSuccess: (data) => {
+      console.log('Quiz API Response:', JSON.stringify(data, null, 2));
+      console.log('Breakdown in API Response:', data.breakdown);
       setQuizResult(data);
     },
     onError: (error) => {
