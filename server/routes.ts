@@ -161,12 +161,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         breakdown: breakdown.map(b => `${b.animal.name}: ${b.percentage}%`)
       });
 
-      res.json({
+      // Ensure breakdown is always valid before sending
+      const validBreakdown = Array.isArray(breakdown) && breakdown.length > 0 ? breakdown : [
+        { animal: { id: bestMatch.animal.id, name: bestMatch.animal.name }, percentage: matchScore },
+        { animal: { id: 'fallback-1', name: 'Fallback' }, percentage: Math.floor((100 - matchScore) / 2) },
+        { animal: { id: 'fallback-2', name: 'Fallback2' }, percentage: 100 - matchScore - Math.floor((100 - matchScore) / 2) }
+      ];
+
+      console.log('Sending response with breakdown:', validBreakdown);
+
+      const responseData = {
         animal: bestMatch.animal,
         resultId: quizResult.id,
         matchScore,
-        breakdown
-      });
+        breakdown: validBreakdown
+      };
+
+      console.log('Full response data:', JSON.stringify(responseData, null, 2));
+      res.json(responseData);
     } catch (error) {
       console.error("Error calculating match:", error);
       res.status(500).json({ message: "Failed to calculate animal match" });

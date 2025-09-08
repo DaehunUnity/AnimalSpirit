@@ -33,11 +33,35 @@ export default function Quiz({ onRestartQuiz }: QuizProps) {
       const response = await apiRequest("POST", "/api/calculate-match", {
         answers: quizAnswers,
       });
-      return response.json();
+      const responseText = await response.text();
+      console.log('Raw API response text:', responseText);
+      
+      try {
+        const data = JSON.parse(responseText);
+        console.log('Parsed API response:', data);
+        return data;
+      } catch (parseError) {
+        console.error('Failed to parse API response:', parseError);
+        console.error('Response text:', responseText);
+        throw new Error('Invalid API response format');
+      }
     },
     onSuccess: (data) => {
       console.log('Quiz API Response:', JSON.stringify(data, null, 2));
       console.log('Breakdown in API Response:', data.breakdown);
+      console.log('Breakdown type:', typeof data.breakdown);
+      console.log('Breakdown is array:', Array.isArray(data.breakdown));
+      
+      // Ensure breakdown exists, if not create fallback
+      if (!data.breakdown || !Array.isArray(data.breakdown) || data.breakdown.length === 0) {
+        console.warn('No breakdown data received, creating fallback');
+        data.breakdown = [
+          { animal: { id: data.animal.id, name: data.animal.name }, percentage: data.matchScore || 95 },
+          { animal: { id: 'fallback-1', name: 'Other' }, percentage: Math.floor((100 - (data.matchScore || 95)) / 2) },
+          { animal: { id: 'fallback-2', name: 'Mixed' }, percentage: 100 - (data.matchScore || 95) - Math.floor((100 - (data.matchScore || 95)) / 2) }
+        ];
+      }
+      
       setQuizResult(data);
     },
     onError: (error) => {
