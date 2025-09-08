@@ -27,6 +27,7 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
 
   // Debug logging
   console.log('ResultCard received:', { animal: animal.name, matchScore, breakdown });
+  console.log('Breakdown check:', breakdown && breakdown.length, breakdown);
 
   // Get localized animal data
   const animalKey = animal.name.toLowerCase() as keyof typeof t.animals;
@@ -146,28 +147,41 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
           </div>
 
           {/* Personality Breakdown */}
-          {breakdown && breakdown.length > 0 && (
+          {breakdown && Array.isArray(breakdown) && breakdown.length > 0 ? (
             <div>
               <h4 className="text-xl font-poppins font-semibold text-dark-blue mb-3 flex items-center">
                 🧬 {language === "ko" ? "성격 분석" : "Personality Analysis"}
               </h4>
               <div className="space-y-3">
                 {breakdown.map((item, index) => {
+                  if (!item || !item.animal || !item.animal.name) {
+                    console.warn('Invalid breakdown item:', item);
+                    return null;
+                  }
+                  
                   const animalKey = item.animal.name.toLowerCase() as keyof typeof t.animals;
                   const localizedName = t.animals[animalKey]?.name || item.animal.name;
+                  
+                  // Get animal emoji
+                  const getAnimalEmoji = (name: string) => {
+                    switch (name) {
+                      case "Lion": return "🦁";
+                      case "Dolphin": return "🐬";
+                      case "Owl": return "🦉";
+                      case "Fox": return "🦊";
+                      case "Eagle": return "🦅";
+                      case "Panda": return "🐼";
+                      case "Cat": return "🐱";
+                      case "Wolf": return "🐺";
+                      default: return "🐾";
+                    }
+                  };
                   
                   return (
                     <div key={index} className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 text-xl">
-                          {item.animal.name === "Lion" && "🦁"}
-                          {item.animal.name === "Dolphin" && "🐬"}
-                          {item.animal.name === "Owl" && "🦉"}
-                          {item.animal.name === "Fox" && "🦊"}
-                          {item.animal.name === "Eagle" && "🦅"}
-                          {item.animal.name === "Panda" && "🐼"}
-                          {item.animal.name === "Cat" && "🐱"}
-                          {item.animal.name === "Wolf" && "🐺"}
+                          {getAnimalEmoji(item.animal.name)}
                         </div>
                         <span className="text-gray-text font-medium">{localizedName}</span>
                       </div>
@@ -175,17 +189,22 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
                         <div className="w-24 bg-gray-200 rounded-full h-2">
                           <div 
                             className="bg-gradient-to-r from-coral to-teal h-2 rounded-full transition-all duration-500 ease-out"
-                            style={{ width: `${item.percentage}%` }}
+                            style={{ width: `${typeof item.percentage === 'number' ? Math.min(Math.max(item.percentage, 0), 100) : 0}%` }}
                           />
                         </div>
                         <span className="text-sm font-semibold text-dark-blue w-10 text-right">
-                          {item.percentage}%
+                          {typeof item.percentage === 'number' ? item.percentage : 0}%
                         </span>
                       </div>
                     </div>
                   );
                 })}
               </div>
+            </div>
+          ) : (
+            <div style={{ display: 'none' }}>
+              {/* Hidden fallback for debugging */}
+              <p>Breakdown data: {JSON.stringify(breakdown)}</p>
             </div>
           )}
         </div>
