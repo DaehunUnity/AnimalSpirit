@@ -281,7 +281,7 @@ export class MemStorage implements IStorage {
           "Courageous in facing challenges",
         ],
         compatibleAnimals: ["eagle", "dolphin", "wolf"],
-        traits: { leadership: 95, confidence: 92, social: 85, strength: 90 },
+        traits: { leadership: 95, confidence: 92, social: 85, ambition: 90, energy: 80, directness: 85 },
         imageUrl:
           "https://images.unsplash.com/photo-1546182990-dffeafbe841d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
       },
@@ -299,7 +299,7 @@ export class MemStorage implements IStorage {
           "Great team player and collaborator",
         ],
         compatibleAnimals: ["lion", "fox", "panda"],
-        traits: { social: 95, empathy: 92, adaptability: 88, joy: 90 },
+        traits: { social: 95, empathy: 92, adaptability: 88, collaboration: 85, optimism: 90, energy: 88 },
         imageUrl:
           "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
       },
@@ -317,7 +317,7 @@ export class MemStorage implements IStorage {
           "Great listener and advisor",
         ],
         compatibleAnimals: ["fox", "cat", "panda"],
-        traits: { wisdom: 95, intelligence: 92, introversion: 85, insight: 90 },
+        traits: { wisdom: 95, strategy: 88, introversion: 85, caution: 90, clarity: 85, communication: 80 },
         imageUrl:
           "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
       },
@@ -336,10 +336,12 @@ export class MemStorage implements IStorage {
         ],
         compatibleAnimals: ["owl", "dolphin", "eagle"],
         traits: {
-          intelligence: 92,
-          creativity: 90,
           adaptability: 95,
-          strategy: 88,
+          strategy: 92, 
+          wisdom: 88,
+          confidence: 80,
+          social: 75,
+          leadership: 70,
         },
         imageUrl:
           "https://images.unsplash.com/photo-1474511320723-9a56873867b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
@@ -359,10 +361,12 @@ export class MemStorage implements IStorage {
         ],
         compatibleAnimals: ["lion", "fox", "wolf"],
         traits: {
-          ambition: 95,
-          independence: 90,
-          vision: 92,
-          determination: 88,
+          independence: 95,
+          leadership: 90,
+          confidence: 92,
+          ambition: 85,
+          strategy: 80,
+          energy: 88,
         },
         imageUrl:
           "https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
@@ -381,7 +385,7 @@ export class MemStorage implements IStorage {
           "Excellent at stress management",
         ],
         compatibleAnimals: ["owl", "dolphin", "cat"],
-        traits: { harmony: 95, empathy: 88, calm: 92, balance: 90 },
+        traits: { harmony: 95, empathy: 88, introversion: 85, contentment: 90, sensitivity: 80, comfort: 85 },
         imageUrl:
           "https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
       },
@@ -401,9 +405,11 @@ export class MemStorage implements IStorage {
         compatibleAnimals: ["owl", "fox", "panda"],
         traits: {
           independence: 95,
-          intuition: 90,
-          selectivity: 88,
           confidence: 85,
+          introversion: 80,
+          sensitivity: 75,
+          comfort: 88,
+          wisdom: 70,
         },
         imageUrl:
           "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
@@ -422,7 +428,7 @@ export class MemStorage implements IStorage {
           "Deep capacity for meaningful relationships",
         ],
         compatibleAnimals: ["lion", "eagle", "dolphin"],
-        traits: { loyalty: 95, protection: 92, teamwork: 88, devotion: 90 },
+        traits: { collaboration: 95, empathy: 90, harmony: 88, social: 75, introversion: 70, resilience: 85 },
         imageUrl:
           "https://images.unsplash.com/photo-1605792657660-596af9009e82?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=400",
       },

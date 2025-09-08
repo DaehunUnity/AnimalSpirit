@@ -2,26 +2,33 @@ import { Heart, Menu } from "lucide-react";
 import LanguageSelector from "@/components/language-selector";
 import { useLanguage } from "@/contexts/language-context";
 import { useTranslation } from "@/lib/translations";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useState } from "react";
 
 export default function QuizHeader() {
   const { language } = useLanguage();
   const t = useTranslation(language);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [, setLocation] = useLocation();
+
+  const handleLogoClick = () => {
+    console.log('Logo clicked, navigating to home');
+    setLocation("/");
+  };
 
   return (
     <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-4xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/">
-            <div className="flex items-center space-x-3 cursor-pointer">
-              <div className="w-10 h-10 bg-gradient-to-r from-coral to-teal rounded-lg flex items-center justify-center">
-                <Heart className="text-white text-xl" />
-              </div>
-              <h1 className="text-xl font-poppins font-bold text-dark-blue">{t.appTitle}</h1>
+          <div 
+            className="flex items-center space-x-3 cursor-pointer"
+            onClick={handleLogoClick}
+          >
+            <div className="w-10 h-10 bg-gradient-to-r from-coral to-teal rounded-lg flex items-center justify-center">
+              <Heart className="text-white text-xl" />
             </div>
-          </Link>
+            <h1 className="text-xl font-poppins font-bold text-dark-blue">{t.appTitle}</h1>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden xl:flex items-center space-x-4">

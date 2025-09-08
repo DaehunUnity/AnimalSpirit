@@ -17,19 +17,28 @@ interface ResultCardProps {
     };
     percentage: number;
   }[];
+  onRestartQuiz?: () => void;
 }
 
-export default function ResultCard({ animal, matchScore, breakdown }: ResultCardProps) {
+export default function ResultCard({ animal, matchScore, breakdown, onRestartQuiz }: ResultCardProps) {
   const [, setLocation] = useLocation();
   const { language } = useLanguage();
   const t = useTranslation(language);
+
+  // Debug logging
+  console.log('ResultCard received:', { animal: animal.name, matchScore, breakdown });
 
   // Get localized animal data
   const animalKey = animal.name.toLowerCase() as keyof typeof t.animals;
   const localizedAnimal = t.animals[animalKey];
 
   const handleRestartQuiz = () => {
-    setLocation("/");
+    console.log('Restart quiz clicked, navigating to home');
+    if (onRestartQuiz) {
+      onRestartQuiz();
+    } else {
+      setLocation("/");
+    }
   };
 
   return (

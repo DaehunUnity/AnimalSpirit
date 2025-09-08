@@ -9,7 +9,11 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import Result from "./result";
 
-export default function Quiz() {
+interface QuizProps {
+  onRestartQuiz?: () => void;
+}
+
+export default function Quiz({ onRestartQuiz }: QuizProps) {
   const { toast } = useToast();
   const { language } = useLanguage();
   const t = useTranslation(language);
@@ -86,7 +90,7 @@ export default function Quiz() {
 
   // Show result if quiz is completed
   if (quizResult) {
-    return <Result animalId={quizResult.animal.id} quizResult={quizResult} />;
+    return <Result animalId={quizResult.animal.id} quizResult={quizResult} onRestartQuiz={onRestartQuiz} />;
   }
 
   if (isLoading) {

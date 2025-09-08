@@ -21,9 +21,10 @@ interface QuizResult {
 interface ResultProps {
   animalId?: string;
   quizResult?: QuizResult;
+  onRestartQuiz?: () => void;
 }
 
-export default function Result({ animalId: propAnimalId, quizResult }: ResultProps = {}) {
+export default function Result({ animalId: propAnimalId, quizResult, onRestartQuiz }: ResultProps = {}) {
   const { animalId: urlAnimalId } = useParams();
   const animalId = propAnimalId || urlAnimalId;
   const { language } = useLanguage();
@@ -79,6 +80,7 @@ export default function Result({ animalId: propAnimalId, quizResult }: ResultPro
         animal={animal} 
         matchScore={quizResult?.matchScore || 95} 
         breakdown={quizResult?.breakdown}
+        onRestartQuiz={onRestartQuiz}
       />
 
       <AnimalPreview animals={otherAnimals} />

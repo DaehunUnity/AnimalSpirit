@@ -12,13 +12,19 @@ export default function Home() {
   const [showQuiz, setShowQuiz] = useState(false);
 
   const handleStartQuiz = () => {
+    console.log('Starting quiz');
     setShowQuiz(true);
+  };
+
+  const handleRestartQuiz = () => {
+    console.log('Restarting quiz from home');
+    setShowQuiz(false);
   };
 
   if (showQuiz) {
     return (
       <main className="max-w-4xl mx-auto px-4 py-8">
-        <Quiz />
+        <Quiz onRestartQuiz={handleRestartQuiz} />
       </main>
     );
   }
