@@ -109,42 +109,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const bestMatch = animalScores[0];
 
-      // Create realistic percentage breakdown
-      // Best match gets 45-70%, 2nd gets 20-35%, 3rd gets 10-25%
+      // Create simple and safe percentage breakdown
       const topAnimals = animalScores.slice(0, 3);
-      const basePercentages = [55, 28, 17]; // Base percentages that add to 100
       
-      // Add some randomness while maintaining ratios
-      const randomVariation = [-5, -3, -1, 0, 1, 3, 5];
+      // Simple fixed percentages that always add to 100
+      const percentages = [60, 25, 15]; // Simple, realistic percentages
+      
       const breakdown = topAnimals.map((item, index) => {
-        const basePercentage = basePercentages[index];
-        const variation = randomVariation[Math.floor(Math.random() * randomVariation.length)];
-        const percentage = Math.max(10, Math.min(70, basePercentage + variation));
-        
         return {
           animal: {
             id: item.animal.id,
             name: item.animal.name
           },
-          percentage
+          percentage: percentages[index] || 0
         };
       });
-
-      // Ensure percentages add up to exactly 100
-      const currentTotal = breakdown.reduce((sum, item) => sum + item.percentage, 0);
-      const difference = 100 - currentTotal;
-      breakdown[0].percentage += difference; // Adjust the highest percentage
-
-      // Ensure realistic bounds
-      breakdown[0].percentage = Math.max(45, Math.min(70, breakdown[0].percentage));
-      breakdown[1].percentage = Math.max(20, Math.min(35, breakdown[1].percentage));
-      breakdown[2].percentage = Math.max(10, Math.min(25, breakdown[2].percentage));
-
-      // Final adjustment to ensure exactly 100%
-      const finalTotal = breakdown.reduce((sum, item) => sum + item.percentage, 0);
-      if (finalTotal !== 100) {
-        breakdown[0].percentage += (100 - finalTotal);
-      }
 
       // Store the result
       const quizResult = await storage.createQuizResult({
@@ -152,7 +131,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         answers: answers.map((a) => a.optionIndex),
       });
 
-      // Match score should be exactly the same as the breakdown percentage for consistency
+      // Match score should be the percentage of the best match (60%)
       const matchScore = breakdown[0].percentage;
 
       console.log('Calculation result:', {

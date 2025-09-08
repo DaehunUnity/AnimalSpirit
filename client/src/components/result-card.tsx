@@ -152,15 +152,17 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
               🧬 {language === "ko" ? "성격 분석" : "Personality Analysis"}
             </h4>
             
-            {/* Always show debug info first */}
-            <div className="bg-blue-100 border p-4 rounded mb-4 text-sm">
-              <p><strong>Debug - Netlify Check:</strong></p>
-              <p>Breakdown prop exists: {breakdown ? 'YES' : 'NO'}</p>
-              <p>Breakdown type: {typeof breakdown}</p>
-              <p>Is Array: {Array.isArray(breakdown) ? 'YES' : 'NO'}</p>
-              <p>Length: {breakdown ? (Array.isArray(breakdown) ? breakdown.length : 'not array') : 'null/undefined'}</p>
-              <p>Raw breakdown: {JSON.stringify(breakdown)}</p>
-            </div>
+            {/* Show debug info only if there's an issue */}
+            {(!breakdown || !Array.isArray(breakdown) || breakdown.length === 0) && (
+              <div className="bg-red-100 border border-red-300 p-4 rounded mb-4 text-sm">
+                <p><strong>Debug - Issue Detected:</strong></p>
+                <p>Breakdown prop exists: {breakdown ? 'YES' : 'NO'}</p>
+                <p>Breakdown type: {typeof breakdown}</p>
+                <p>Is Array: {Array.isArray(breakdown) ? 'YES' : 'NO'}</p>
+                <p>Length: {breakdown ? (Array.isArray(breakdown) ? breakdown.length : 'not array') : 'null/undefined'}</p>
+                <p>Raw breakdown: {JSON.stringify(breakdown)}</p>
+              </div>
+            )}
             
             {breakdown && Array.isArray(breakdown) && breakdown.length > 0 ? (
               <div className="space-y-3">

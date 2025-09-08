@@ -52,14 +52,9 @@ export default function Quiz({ onRestartQuiz }: QuizProps) {
       console.log('Breakdown type:', typeof data.breakdown);
       console.log('Breakdown is array:', Array.isArray(data.breakdown));
       
-      // Ensure breakdown exists, if not create fallback
+      // Validate breakdown data
       if (!data.breakdown || !Array.isArray(data.breakdown) || data.breakdown.length === 0) {
-        console.warn('No breakdown data received, creating fallback');
-        data.breakdown = [
-          { animal: { id: data.animal.id, name: data.animal.name }, percentage: data.matchScore || 95 },
-          { animal: { id: 'fallback-1', name: 'Other' }, percentage: Math.floor((100 - (data.matchScore || 95)) / 2) },
-          { animal: { id: 'fallback-2', name: 'Mixed' }, percentage: 100 - (data.matchScore || 95) - Math.floor((100 - (data.matchScore || 95)) / 2) }
-        ];
+        console.warn('Invalid breakdown data received:', data.breakdown);
       }
       
       setQuizResult(data);
