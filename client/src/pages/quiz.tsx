@@ -86,7 +86,7 @@ export default function Quiz() {
 
   // Show result if quiz is completed
   if (quizResult) {
-    return <Result animalId={quizResult.animal.id} />;
+    return <Result animalId={quizResult.animal.id} quizResult={quizResult} />;
   }
 
   if (isLoading) {

@@ -28,6 +28,7 @@ export const quizResults = pgTable("quiz_results", {
   createdAt: text("created_at").notNull(),
 });
 
+
 export const insertQuestionSchema = createInsertSchema(questions);
 export const insertAnimalSchema = createInsertSchema(animals);
 export const insertQuizResultSchema = createInsertSchema(quizResults).omit({ id: true, createdAt: true });

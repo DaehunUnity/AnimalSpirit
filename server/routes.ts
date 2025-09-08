@@ -73,36 +73,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Find best matching animal
-      let bestMatch = animals[0];
-      let bestScore = 0;
-
-      for (const animal of animals) {
+      // Calculate scores for all animals
+      const animalScores = animals.map(animal => {
         let score = 0;
+        let maxPossibleScore = 0;
         const animalTraits = animal.traits as Record<string, number>;
+        
+        // Get all unique traits from both user and animal
+        const allTraits = new Set([
+          ...Object.keys(traitScores),
+          ...Object.keys(animalTraits)
+        ]);
 
-        for (const [trait, userScore] of Object.entries(traitScores)) {
+        for (const trait of allTraits) {
+          const userScore = traitScores[trait] || 0;
           const animalScore = animalTraits[trait] || 0;
-          // Higher similarity between user and animal trait = higher score
-          score += Math.max(0, 100 - Math.abs(userScore * 10 - animalScore));
+          
+          // Calculate similarity (inverse of difference)
+          const maxDifference = Math.max(userScore, animalScore, 30); // Normalize by max possible value
+          const difference = Math.abs(userScore - animalScore);
+          const similarity = Math.max(0, maxDifference - difference);
+          
+          score += similarity;
+          maxPossibleScore += maxDifference;
         }
 
-        if (score > bestScore) {
-          bestScore = score;
-          bestMatch = animal;
-        }
-      }
+        return {
+          animal,
+          rawScore: score,
+          maxScore: maxPossibleScore,
+          percentage: maxPossibleScore > 0 ? Math.round((score / maxPossibleScore) * 100) : 0
+        };
+      }).sort((a, b) => b.rawScore - a.rawScore);
+
+      const bestMatch = animalScores[0];
+
+      // Normalize percentages so they add up to 100
+      const totalRawScore = animalScores.reduce((sum, item) => sum + item.rawScore, 0);
+      const normalizedScores = animalScores.map(item => ({
+        ...item,
+        normalizedPercentage: totalRawScore > 0 ? Math.round((item.rawScore / totalRawScore) * 100) : 0
+      }));
+
+      // Get top 3 animals
+      const topAnimals = normalizedScores.slice(0, 3);
 
       // Store the result
       const quizResult = await storage.createQuizResult({
-        animalId: bestMatch.id,
+        animalId: bestMatch.animal.id,
         answers: answers.map((a) => a.optionIndex),
       });
 
       res.json({
-        animal: bestMatch,
+        animal: bestMatch.animal,
         resultId: quizResult.id,
-        matchScore: Math.round(bestScore / answers.length),
+        matchScore: Math.max(65, Math.min(98, bestMatch.percentage)), // Ensure realistic range
+        breakdown: topAnimals.map(item => ({
+          animal: {
+            id: item.animal.id,
+            name: item.animal.name
+          },
+          percentage: item.normalizedPercentage
+        }))
       });
     } catch (error) {
       console.error("Error calculating match:", error);
@@ -130,6 +162,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch statistics" });
     }
   });
+
 
   const httpServer = createServer(app);
   return httpServer;

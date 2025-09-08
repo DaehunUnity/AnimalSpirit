@@ -6,11 +6,24 @@ import type { Animal } from "@shared/schema";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "wouter";
 
-interface ResultProps {
-  animalId?: string;
+interface QuizResult {
+  animal: Animal;
+  matchScore: number;
+  breakdown: {
+    animal: {
+      id: string;
+      name: string;
+    };
+    percentage: number;
+  }[];
 }
 
-export default function Result({ animalId: propAnimalId }: ResultProps = {}) {
+interface ResultProps {
+  animalId?: string;
+  quizResult?: QuizResult;
+}
+
+export default function Result({ animalId: propAnimalId, quizResult }: ResultProps = {}) {
   const { animalId: urlAnimalId } = useParams();
   const animalId = propAnimalId || urlAnimalId;
   const { language } = useLanguage();
@@ -62,7 +75,11 @@ export default function Result({ animalId: propAnimalId }: ResultProps = {}) {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
-      <ResultCard animal={animal} matchScore={95} />
+      <ResultCard 
+        animal={animal} 
+        matchScore={quizResult?.matchScore || 95} 
+        breakdown={quizResult?.breakdown}
+      />
 
       <AnimalPreview animals={otherAnimals} />
     </main>

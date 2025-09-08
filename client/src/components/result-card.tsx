@@ -10,9 +10,16 @@ import ShareButtons from "./share-buttons";
 interface ResultCardProps {
   animal: Animal;
   matchScore: number;
+  breakdown?: {
+    animal: {
+      id: string;
+      name: string;
+    };
+    percentage: number;
+  }[];
 }
 
-export default function ResultCard({ animal, matchScore }: ResultCardProps) {
+export default function ResultCard({ animal, matchScore, breakdown }: ResultCardProps) {
   const [, setLocation] = useLocation();
   const { language } = useLanguage();
   const t = useTranslation(language);
@@ -128,6 +135,50 @@ export default function ResultCard({ animal, matchScore }: ResultCardProps) {
               )}
             </div>
           </div>
+
+          {/* Personality Breakdown */}
+          {breakdown && breakdown.length > 0 && (
+            <div>
+              <h4 className="text-xl font-poppins font-semibold text-dark-blue mb-3 flex items-center">
+                🧬 {language === "ko" ? "성격 분석" : "Personality Analysis"}
+              </h4>
+              <div className="space-y-3">
+                {breakdown.map((item, index) => {
+                  const animalKey = item.animal.name.toLowerCase() as keyof typeof t.animals;
+                  const localizedName = t.animals[animalKey]?.name || item.animal.name;
+                  
+                  return (
+                    <div key={index} className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 text-xl">
+                          {item.animal.name === "Lion" && "🦁"}
+                          {item.animal.name === "Dolphin" && "🐬"}
+                          {item.animal.name === "Owl" && "🦉"}
+                          {item.animal.name === "Fox" && "🦊"}
+                          {item.animal.name === "Eagle" && "🦅"}
+                          {item.animal.name === "Panda" && "🐼"}
+                          {item.animal.name === "Cat" && "🐱"}
+                          {item.animal.name === "Wolf" && "🐺"}
+                        </div>
+                        <span className="text-gray-text font-medium">{localizedName}</span>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-24 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-gradient-to-r from-coral to-teal h-2 rounded-full transition-all duration-500 ease-out"
+                            style={{ width: `${item.percentage}%` }}
+                          />
+                        </div>
+                        <span className="text-sm font-semibold text-dark-blue w-10 text-right">
+                          {item.percentage}%
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Sharing Section */}

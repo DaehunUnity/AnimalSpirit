@@ -52,9 +52,6 @@ export default function QuizHeader() {
                 </span>
               </Link>
             </nav>
-            <div className="hidden 2xl:flex items-center">
-              <span className="text-xs text-gray-text">{language === 'ko' ? '14만+' : 'Over'} <span className="font-semibold text-coral">142k</span> {language === 'ko' ? '참여' : 'users'}</span>
-            </div>
             <LanguageSelector />
           </div>
 
@@ -99,9 +96,6 @@ export default function QuizHeader() {
                   {language === "ko" ? "문의" : "Contact"}
                 </span>
               </Link>
-              <div className="pt-2">
-                <span className="text-sm text-gray-text">{language === 'ko' ? '14만+ 명 참여' : 'Over 142k users'}</span>
-              </div>
             </nav>
           </div>
         )}

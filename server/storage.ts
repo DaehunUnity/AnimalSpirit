@@ -485,6 +485,7 @@ export class MemStorage implements IStorage {
       .map(([animalId, count]) => ({ animalId, count }))
       .sort((a, b) => b.count - a.count);
   }
+
 }
 
 export const storage = new MemStorage();

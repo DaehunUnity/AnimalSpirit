@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/language-context";
 import { useTranslation } from "@/lib/translations";
-import { Clock, Heart, Play, Share, Users } from "lucide-react";
+import { Clock, Heart, Play, Share } from "lucide-react";
 import { useState } from "react";
 import { Link } from "wouter";
 import Quiz from "./quiz";
@@ -49,18 +49,12 @@ export default function Home() {
             {t.heroSubtitle}
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-coral to-pink rounded-full flex items-center justify-center mx-auto mb-2">
                 <Clock className="text-white text-2xl" />
               </div>
               <p className="text-sm font-medium text-dark-blue">{t.minutes}</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-r from-teal to-sky rounded-full flex items-center justify-center mx-auto mb-2">
-                <Users className="text-white text-2xl" />
-              </div>
-              <p className="text-sm font-medium text-dark-blue">{t.taken}</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-mint to-golden rounded-full flex items-center justify-center mx-auto mb-2">

@@ -3,14 +3,12 @@ export type Language = 'ko' | 'en';
 export interface Translations {
   // Header
   appTitle: string;
-  testTakenCount: string;
   
   // Home page
   heroTitle: string;
   heroSubtitle: string;
   startTest: string;
   minutes: string;
-  taken: string;
   easySharing: string;
   freeTest: string;
   
@@ -156,13 +154,11 @@ export interface Translations {
 export const translations: Record<Language, Translations> = {
   ko: {
     appTitle: "동물 성격 테스트",
-    testTakenCount: "명이 이 테스트를 받았습니다!",
     
     heroTitle: "어떤 동물과 가장 닮았나요?",
     heroSubtitle: "10가지 간단한 질문으로 나만의 정신적 동물을 찾아보세요. 정확하고 재미있는 결과를 얻고 친구들과 공유하세요!",
     startTest: "테스트 시작",
     minutes: "3분 소요",
-    taken: "14만명+ 참여",
     easySharing: "쉬운 공유",
     freeTest: "무료 테스트",
     
@@ -391,13 +387,11 @@ export const translations: Record<Language, Translations> = {
   
   en: {
     appTitle: "Animal Personality Test",
-    testTakenCount: "people have taken this test!",
     
     heroTitle: "What animal are you most like?",
     heroSubtitle: "Discover your spirit animal with 10 simple questions. Get accurate, fun results that reveal your personality traits and share them with friends!",
     startTest: "Start Test",
     minutes: "3 minutes",
-    taken: "142k+ taken",
     easySharing: "Easy sharing",
     freeTest: "Free test",
     
