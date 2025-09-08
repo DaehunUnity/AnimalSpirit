@@ -73,50 +73,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Calculate scores for all animals
+      // Calculate similarity scores for all animals
       const animalScores = animals.map(animal => {
-        let score = 0;
-        let maxPossibleScore = 0;
+        let totalSimilarity = 0;
         const animalTraits = animal.traits as Record<string, number>;
         
-        // Get all unique traits from both user and animal
-        const allTraits = new Set([
-          ...Object.keys(traitScores),
-          ...Object.keys(animalTraits)
-        ]);
-
-        for (const trait of allTraits) {
-          const userScore = traitScores[trait] || 0;
+        // Calculate similarity for each trait the user has
+        for (const [trait, userScore] of Object.entries(traitScores)) {
           const animalScore = animalTraits[trait] || 0;
           
-          // Calculate similarity (inverse of difference)
-          const maxDifference = Math.max(userScore, animalScore, 30); // Normalize by max possible value
+          // Calculate similarity as inverse of normalized difference
+          // Both scores should be in similar range (0-30 typically)
           const difference = Math.abs(userScore - animalScore);
-          const similarity = Math.max(0, maxDifference - difference);
+          const maxPossible = Math.max(userScore, animalScore, 20); // Minimum baseline
+          const similarity = Math.max(0, maxPossible - difference);
           
-          score += similarity;
-          maxPossibleScore += maxDifference;
+          totalSimilarity += similarity;
         }
 
         return {
           animal,
-          rawScore: score,
-          maxScore: maxPossibleScore,
-          percentage: maxPossibleScore > 0 ? Math.round((score / maxPossibleScore) * 100) : 0
+          rawScore: totalSimilarity,
         };
       }).sort((a, b) => b.rawScore - a.rawScore);
 
-      const bestMatch = animalScores[0];
-
-      // Normalize percentages so they add up to 100
-      const totalRawScore = animalScores.reduce((sum, item) => sum + item.rawScore, 0);
+      // Normalize scores to percentages that add up to 100%
+      const totalScore = animalScores.reduce((sum, item) => sum + Math.max(item.rawScore, 1), 0);
+      
       const normalizedScores = animalScores.map(item => ({
         ...item,
-        normalizedPercentage: totalRawScore > 0 ? Math.round((item.rawScore / totalRawScore) * 100) : 0
+        percentage: Math.round((Math.max(item.rawScore, 1) / totalScore) * 100)
       }));
+
+      // Ensure percentages add up to 100% by adjusting the highest score
+      const currentTotal = normalizedScores.reduce((sum, item) => sum + item.percentage, 0);
+      if (currentTotal !== 100) {
+        normalizedScores[0].percentage += (100 - currentTotal);
+      }
 
       // Get top 3 animals
       const topAnimals = normalizedScores.slice(0, 3);
+      const bestMatch = topAnimals[0];
 
       // Store the result
       const quizResult = await storage.createQuizResult({
@@ -124,16 +121,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
         answers: answers.map((a) => a.optionIndex),
       });
 
+      // Calculate a realistic match score (70-95% range)
+      const matchScore = Math.max(70, Math.min(95, bestMatch.percentage + Math.floor(Math.random() * 10)));
+
       res.json({
         animal: bestMatch.animal,
         resultId: quizResult.id,
-        matchScore: Math.max(65, Math.min(98, bestMatch.percentage)), // Ensure realistic range
+        matchScore,
         breakdown: topAnimals.map(item => ({
           animal: {
             id: item.animal.id,
             name: item.animal.name
           },
-          percentage: item.normalizedPercentage
+          percentage: item.percentage
         }))
       });
     } catch (error) {
