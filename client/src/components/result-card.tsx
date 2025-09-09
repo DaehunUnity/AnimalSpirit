@@ -152,14 +152,32 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
             
             
 {(() => {
-              // Create fallback breakdown if data is missing
-              const validBreakdown = breakdown && Array.isArray(breakdown) && breakdown.length > 0 
-                ? breakdown 
-                : [
-                    { animal: { id: animal.id, name: animal.name }, percentage: matchScore },
-                    { animal: { id: 'compatible-1', name: 'Compatible' }, percentage: Math.max(10, Math.floor((100 - matchScore) * 0.6)) },
-                    { animal: { id: 'compatible-2', name: 'Similar' }, percentage: Math.max(5, 100 - matchScore - Math.floor((100 - matchScore) * 0.6)) }
-                  ];
+              // Only use fallback if breakdown is completely missing or invalid
+              let validBreakdown = breakdown;
+              
+              // Check if breakdown data is valid and has real animal names
+              const hasValidData = breakdown && 
+                Array.isArray(breakdown) && 
+                breakdown.length > 0 && 
+                breakdown.every(item => 
+                  item && 
+                  item.animal && 
+                  item.animal.name && 
+                  typeof item.percentage === 'number' &&
+                  !['Compatible', 'Similar', 'compatible-1', 'compatible-2'].includes(item.animal.name)
+                );
+              
+              // Only create fallback if data is truly missing or invalid
+              if (!hasValidData) {
+                console.log('Using fallback breakdown data');
+                validBreakdown = [
+                  { animal: { id: animal.id, name: animal.name }, percentage: matchScore },
+                  { animal: { id: 'fox', name: 'Fox' }, percentage: Math.max(5, Math.floor((100 - matchScore) * 0.4)) },
+                  { animal: { id: 'cat', name: 'Cat' }, percentage: Math.max(1, 100 - matchScore - Math.floor((100 - matchScore) * 0.4)) }
+                ];
+              } else {
+                console.log('Using server breakdown data:', breakdown);
+              }
               
               return (
                 <div className="space-y-3">
@@ -183,8 +201,6 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
                         case "Panda": return "🐼";
                         case "Cat": return "🐱";
                         case "Wolf": return "🐺";
-                        case "Compatible": return "💫";
-                        case "Similar": return "✨";
                         default: return "🐾";
                       }
                     };

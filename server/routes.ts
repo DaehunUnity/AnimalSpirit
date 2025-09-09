@@ -144,7 +144,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           percentage: Math.max(1, Math.min(100, normalizedPercentages[index] || 1))
         }));
       } else {
-        // Fallback to safe fixed distribution
+        // Fallback to safe fixed distribution with actual animals
         breakdown = topAnimals.map((item, index) => ({
           animal: {
             id: String(item.animal.id || 'unknown'),
@@ -163,6 +163,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Use actual calculated score, but cap it at 100% with safety checks
       const rawScore = Number(bestMatch.score) || 85;
       const matchScore = Math.min(Math.max(Math.round(rawScore), 30), 100);
+      
+      // Make sure the first breakdown item matches the main match score
+      if (breakdown && breakdown.length > 0) {
+        breakdown[0].percentage = matchScore;
+        // Adjust other percentages to maintain reasonable distribution
+        if (breakdown.length >= 2) {
+          const remaining = 100 - matchScore;
+          breakdown[1].percentage = Math.max(1, Math.floor(remaining * 0.6));
+          if (breakdown.length >= 3) {
+            breakdown[2].percentage = Math.max(1, remaining - breakdown[1].percentage);
+          }
+        }
+      }
       
       // Log for Netlify debugging
       console.log('[NETLIFY DEBUG] Score calculation:', {
