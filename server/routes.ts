@@ -160,27 +160,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         answers: answers.map((a) => a.optionIndex),
       });
 
-      // Use actual calculated score, but cap it at 100% with safety checks
-      const rawScore = Number(bestMatch.score) || 85;
-      const matchScore = Math.min(Math.max(Math.round(rawScore), 30), 100);
-      
-      // Make sure the first breakdown item matches the main match score
-      if (breakdown && breakdown.length > 0) {
-        breakdown[0].percentage = matchScore;
-        // Adjust other percentages to maintain reasonable distribution
-        if (breakdown.length >= 2) {
-          const remaining = 100 - matchScore;
-          breakdown[1].percentage = Math.max(1, Math.floor(remaining * 0.6));
-          if (breakdown.length >= 3) {
-            breakdown[2].percentage = Math.max(1, remaining - breakdown[1].percentage);
-          }
-        }
-      }
+      // Use the highest percentage from breakdown as the match score
+      // This ensures consistency between overall match and detailed analysis
+      const matchScore = breakdown && breakdown.length > 0 
+        ? Math.max(...breakdown.map(item => item.percentage))
+        : Math.min(Math.max(Math.round(Number(bestMatch.score) || 85), 30), 100);
       
       // Log for Netlify debugging
       console.log('[NETLIFY DEBUG] Score calculation:', {
-        rawScore,
-        finalScore: matchScore,
+        bestMatchScore: bestMatch.score,
+        finalMatchScore: matchScore,
+        breakdownLength: breakdown?.length || 0,
         environment: process.env.NODE_ENV || 'unknown'
       });
       
@@ -222,7 +212,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('[NETLIFY DEBUG] Pre-send data:', {
         matchScore: responseData.matchScore,
         breakdownLength: responseData.breakdown.length,
-        breakdown: responseData.breakdown
+        breakdown: responseData.breakdown.map(item => ({
+          animalName: item.animal.name,
+          percentage: item.percentage
+        }))
       });
       
       // Use JSON.stringify + JSON.parse to ensure clean serialization

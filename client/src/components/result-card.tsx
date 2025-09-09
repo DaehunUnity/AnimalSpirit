@@ -169,14 +169,14 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
               
               // Only create fallback if data is truly missing or invalid
               if (!hasValidData) {
-                console.log('Using fallback breakdown data');
+                console.log('Using fallback breakdown data - received breakdown:', breakdown);
                 validBreakdown = [
                   { animal: { id: animal.id, name: animal.name }, percentage: matchScore },
                   { animal: { id: 'fox', name: 'Fox' }, percentage: Math.max(5, Math.floor((100 - matchScore) * 0.4)) },
                   { animal: { id: 'cat', name: 'Cat' }, percentage: Math.max(1, 100 - matchScore - Math.floor((100 - matchScore) * 0.4)) }
                 ];
               } else {
-                console.log('Using server breakdown data:', breakdown);
+                console.log('Using valid server breakdown data:', breakdown);
               }
               
               return (
