@@ -60,7 +60,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Calculate trait scores based on answers
       const traitScores: Record<string, number> = {};
 
-      console.log('Processing answers:', answers.length);
       for (const answer of answers) {
         const question = questions.find((q) => q.id === answer.questionId);
         if (!question || !(question.options as any[])[answer.optionIndex])
@@ -69,14 +68,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const selectedOption = (question.options as any[])[answer.optionIndex];
         const traits = selectedOption.traits || {};
         
-        console.log(`Q${question.order}: Option ${answer.optionIndex} - "${selectedOption.text}" ->`, traits);
 
         for (const [trait, score] of Object.entries(traits)) {
           traitScores[trait] = (traitScores[trait] || 0) + (score as number);
         }
       }
       
-      console.log('Final trait scores:', traitScores);
 
       // Calculate compatibility scores for all animals
       const animalScores = animals.map(animal => {
@@ -96,8 +93,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           calculations.push(`${trait}: user=${userScore} vs animal=${animalScore} -> similarity=${similarity}`);
         }
 
-        console.log(`${animal.name} calculations:`, calculations);
-        console.log(`${animal.name} total score:`, score);
 
         return {
           animal,
@@ -105,7 +100,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         };
       }).sort((a, b) => b.score - a.score);
       
-      console.log('Animal scores ranking:', animalScores.map(a => `${a.animal.name}: ${a.score}`));
 
       const bestMatch = animalScores[0];
 
@@ -134,11 +128,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Match score should be the percentage of the best match (60%)
       const matchScore = breakdown[0].percentage;
 
-      console.log('Calculation result:', {
-        bestAnimal: bestMatch.animal.name,
-        matchScore,
-        breakdown: breakdown.map(b => `${b.animal.name}: ${b.percentage}%`)
-      });
 
       // Ensure breakdown is always valid before sending
       const validBreakdown = Array.isArray(breakdown) && breakdown.length > 0 ? breakdown : [
@@ -147,7 +136,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         { animal: { id: 'fallback-2', name: 'Fallback2' }, percentage: 100 - matchScore - Math.floor((100 - matchScore) / 2) }
       ];
 
-      console.log('Sending response with breakdown:', validBreakdown);
 
       const responseData = {
         animal: bestMatch.animal,
@@ -156,7 +144,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
         breakdown: validBreakdown
       };
 
-      console.log('Full response data:', JSON.stringify(responseData, null, 2));
       res.json(responseData);
     } catch (error) {
       console.error("Error calculating match:", error);

@@ -482,7 +482,7 @@ export class MemStorage implements IStorage {
   async getPopularAnimals(): Promise<{ animalId: string; count: number }[]> {
     const counts = new Map<string, number>();
 
-    for (const result of this.quizResults.values()) {
+    for (const result of Array.from(this.quizResults.values())) {
       const current = counts.get(result.animalId) || 0;
       counts.set(result.animalId, current + 1);
     }

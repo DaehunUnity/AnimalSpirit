@@ -24,7 +24,7 @@ interface ResultProps {
   onRestartQuiz?: () => void;
 }
 
-export default function Result({ animalId: propAnimalId, quizResult, onRestartQuiz }: ResultProps = {}) {
+function Result({ animalId: propAnimalId, quizResult, onRestartQuiz }: ResultProps = {}) {
   const { animalId: urlAnimalId } = useParams();
   const animalId = propAnimalId || urlAnimalId;
   const { language } = useLanguage();
@@ -74,9 +74,6 @@ export default function Result({ animalId: propAnimalId, quizResult, onRestartQu
 
   const otherAnimals = allAnimals?.filter((a) => a.id !== animal.id) || [];
 
-  // Debug logging for Result page
-  console.log('Result page - quizResult:', quizResult);
-  console.log('Result page - breakdown from quizResult:', quizResult?.breakdown);
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
@@ -91,3 +88,11 @@ export default function Result({ animalId: propAnimalId, quizResult, onRestartQu
     </main>
   );
 }
+
+// Router wrapper component for wouter
+export default function ResultRoute() {
+  return <Result />;
+}
+
+// Export the original component for direct use
+export { Result };

@@ -154,7 +154,7 @@ export default function FAQ() {
     }
   ];
 
-  const categories = [...new Set(faqData.map(item => item.category))];
+  const categories = Array.from(new Set(faqData.map(item => item.category)));
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">

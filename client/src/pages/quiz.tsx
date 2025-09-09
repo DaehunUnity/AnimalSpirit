@@ -7,7 +7,20 @@ import { useTranslation } from "@/lib/translations";
 import type { Question, QuizAnswer } from "@shared/schema";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import Result from "./result";
+import { Result } from "./result";
+import type { Animal } from "@shared/schema";
+
+interface QuizResult {
+  animal: Animal;
+  matchScore: number;
+  breakdown: {
+    animal: {
+      id: string;
+      name: string;
+    };
+    percentage: number;
+  }[];
+}
 
 interface QuizProps {
   onRestartQuiz?: () => void;
@@ -20,9 +33,7 @@ export default function Quiz({ onRestartQuiz }: QuizProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [quizResult, setQuizResult] = useState<{
-    animal: { id: string };
-  } | null>(null);
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
   const { data: questions, isLoading } = useQuery<Question[]>({
     queryKey: ["/api/questions"],
@@ -34,11 +45,9 @@ export default function Quiz({ onRestartQuiz }: QuizProps) {
         answers: quizAnswers,
       });
       const responseText = await response.text();
-      console.log('Raw API response text:', responseText);
       
       try {
         const data = JSON.parse(responseText);
-        console.log('Parsed API response:', data);
         return data;
       } catch (parseError) {
         console.error('Failed to parse API response:', parseError);
