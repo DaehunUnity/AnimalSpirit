@@ -134,13 +134,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Use actual calculated score, but cap it at 100%
       const matchScore = Math.min(Math.round(bestMatch.score), 100);
       
-      // Temporary debug logging
-      console.log('[DEBUG] Match calculation:', {
-        bestMatchScore: bestMatch.score,
-        finalMatchScore: matchScore,
-        topAnimalsScores: topAnimals.map(a => ({ name: a.animal.name, score: a.score })),
-        totalScore: topAnimals.reduce((sum, item) => sum + item.score, 0)
-      });
 
 
       // Ensure breakdown is always valid before sending
@@ -151,14 +144,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       ];
 
 
+      // Ensure all data is properly serializable for serverless functions
       const responseData = {
-        animal: bestMatch.animal,
-        resultId: quizResult.id,
-        matchScore,
-        breakdown: validBreakdown
+        animal: {
+          id: bestMatch.animal.id,
+          name: bestMatch.animal.name,
+          subtitle: bestMatch.animal.subtitle,
+          description: bestMatch.animal.description,
+          personality: bestMatch.animal.personality,
+          strengths: bestMatch.animal.strengths,
+          compatibleAnimals: bestMatch.animal.compatibleAnimals,
+          traits: bestMatch.animal.traits,
+          imageUrl: bestMatch.animal.imageUrl
+        },
+        resultId: String(quizResult.id),
+        matchScore: Number(matchScore),
+        breakdown: validBreakdown.map(item => ({
+          animal: {
+            id: String(item.animal.id),
+            name: String(item.animal.name)
+          },
+          percentage: Number(item.percentage)
+        }))
       };
 
-      res.json(responseData);
+      // Use JSON.stringify + JSON.parse to ensure clean serialization
+      const cleanData = JSON.parse(JSON.stringify(responseData));
+      res.json(cleanData);
     } catch (error) {
       console.error("Error calculating match:", error);
       res.status(500).json({ message: "Failed to calculate animal match" });
