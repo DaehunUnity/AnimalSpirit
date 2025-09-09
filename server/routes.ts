@@ -77,7 +77,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Calculate compatibility scores for all animals
       const animalScores = animals.map(animal => {
-        let score = 0;
+        let totalSimilarity = 0;
+        let traitCount = 0;
         const animalTraits = animal.traits as Record<string, number>;
         const calculations = [];
         
@@ -88,34 +89,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
           // Simple similarity: closer scores = higher similarity (0-100 scale)
           const difference = Math.abs(userScore - animalScore);
           const similarity = Math.max(0, 100 - (difference * 3)); // Scale difference
-          score += similarity;
+          totalSimilarity += similarity;
+          traitCount++;
           
           calculations.push(`${trait}: user=${userScore} vs animal=${animalScore} -> similarity=${similarity}`);
         }
 
+        // Calculate average similarity (0-100 scale)
+        const averageScore = traitCount > 0 ? totalSimilarity / traitCount : 50;
 
         return {
           animal,
-          score: Math.max(score, 50), // Minimum score to ensure all animals get some percentage
+          score: Math.max(averageScore, 30), // Minimum score for some variety
         };
       }).sort((a, b) => b.score - a.score);
       
 
       const bestMatch = animalScores[0];
 
-      // Create simple and safe percentage breakdown
+      // Create percentage breakdown based on actual scores
       const topAnimals = animalScores.slice(0, 3);
+      const totalScore = topAnimals.reduce((sum, item) => sum + item.score, 0);
       
-      // Simple fixed percentages that always add to 100
-      const percentages = [60, 25, 15]; // Simple, realistic percentages
-      
-      const breakdown = topAnimals.map((item, index) => {
+      const breakdown = topAnimals.map((item) => {
+        // Calculate percentage based on actual scores, but ensure reasonable distribution
+        const rawPercentage = totalScore > 0 ? (item.score / totalScore) * 100 : 0;
+        const percentage = Math.min(Math.max(Math.round(rawPercentage), 1), 100);
+        
         return {
           animal: {
             id: item.animal.id,
             name: item.animal.name
           },
-          percentage: percentages[index] || 0
+          percentage
         };
       });
 
@@ -125,8 +131,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         answers: answers.map((a) => a.optionIndex),
       });
 
-      // Match score should be the percentage of the best match (60%)
-      const matchScore = breakdown[0].percentage;
+      // Use actual calculated score, but cap it at 100%
+      const matchScore = Math.min(Math.round(bestMatch.score), 100);
 
 
       // Ensure breakdown is always valid before sending
