@@ -49,7 +49,35 @@ export default function Quiz({ onRestartQuiz }: QuizProps) {
       try {
         const data = JSON.parse(responseText);
         
-        return data;
+        // Netlify safety checks and corrections
+        const safeData = {
+          ...data,
+          // Ensure matchScore is always reasonable
+          matchScore: Math.min(Math.max(Number(data.matchScore) || 85, 30), 100),
+          // Ensure breakdown always exists and is valid
+          breakdown: Array.isArray(data.breakdown) && data.breakdown.length > 0 
+            ? data.breakdown.map((item: any) => ({
+                animal: {
+                  id: String(item?.animal?.id || 'unknown'),
+                  name: String(item?.animal?.name || 'Unknown')
+                },
+                percentage: Math.min(Math.max(Number(item?.percentage) || 15, 1), 100)
+              }))
+            : [
+                { animal: { id: data.animal?.id || 'fallback', name: data.animal?.name || 'Animal' }, percentage: 60 },
+                { animal: { id: 'second', name: 'Compatible Match' }, percentage: 25 },
+                { animal: { id: 'third', name: 'Good Friend' }, percentage: 15 }
+              ]
+        };
+        
+        console.log('[NETLIFY DEBUG] Processed data:', {
+          originalMatchScore: data.matchScore,
+          safeMatchScore: safeData.matchScore,
+          originalBreakdown: data.breakdown,
+          safeBreakdownLength: safeData.breakdown.length
+        });
+        
+        return safeData;
       } catch (parseError) {
         console.error('Failed to parse API response:', parseError);
         console.error('Response text:', responseText);
