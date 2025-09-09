@@ -151,59 +151,71 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
             </h4>
             
             
-            {breakdown && Array.isArray(breakdown) && breakdown.length > 0 ? (
-              <div className="space-y-3">
-                {breakdown.map((item, index) => {
-                  if (!item || !item.animal || !item.animal.name) {
-                    return null;
-                  }
-                  
-                  const animalKey = item.animal.name.toLowerCase() as keyof typeof t.animals;
-                  const localizedName = t.animals[animalKey]?.name || item.animal.name;
-                  
-                  // Get animal emoji
-                  const getAnimalEmoji = (name: string) => {
-                    switch (name) {
-                      case "Lion": return "🦁";
-                      case "Dolphin": return "🐬";
-                      case "Owl": return "🦉";
-                      case "Fox": return "🦊";
-                      case "Eagle": return "🦅";
-                      case "Panda": return "🐼";
-                      case "Cat": return "🐱";
-                      case "Wolf": return "🐺";
-                      default: return "🐾";
+{(() => {
+              // Create fallback breakdown if data is missing
+              const validBreakdown = breakdown && Array.isArray(breakdown) && breakdown.length > 0 
+                ? breakdown 
+                : [
+                    { animal: { id: animal.id, name: animal.name }, percentage: matchScore },
+                    { animal: { id: 'compatible-1', name: 'Compatible' }, percentage: Math.max(10, Math.floor((100 - matchScore) * 0.6)) },
+                    { animal: { id: 'compatible-2', name: 'Similar' }, percentage: Math.max(5, 100 - matchScore - Math.floor((100 - matchScore) * 0.6)) }
+                  ];
+              
+              return (
+                <div className="space-y-3">
+                  {validBreakdown.map((item, index) => {
+                    if (!item || !item.animal) {
+                      return null;
                     }
-                  };
-                  
-                  return (
-                    <div key={index} className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 text-xl">
-                          {getAnimalEmoji(item.animal.name)}
+                    
+                    const animalName = item.animal.name || 'Unknown';
+                    const animalKey = animalName.toLowerCase() as keyof typeof t.animals;
+                    const localizedName = t.animals[animalKey]?.name || animalName;
+                    
+                    // Get animal emoji
+                    const getAnimalEmoji = (name: string) => {
+                      switch (name) {
+                        case "Lion": return "🦁";
+                        case "Dolphin": return "🐬";
+                        case "Owl": return "🦉";
+                        case "Fox": return "🦊";
+                        case "Eagle": return "🦅";
+                        case "Panda": return "🐼";
+                        case "Cat": return "🐱";
+                        case "Wolf": return "🐺";
+                        case "Compatible": return "💫";
+                        case "Similar": return "✨";
+                        default: return "🐾";
+                      }
+                    };
+                    
+                    const percentage = Math.max(1, Math.min(100, Number(item.percentage) || 1));
+                    
+                    return (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 text-xl">
+                            {getAnimalEmoji(animalName)}
+                          </div>
+                          <span className="text-gray-text font-medium">{localizedName}</span>
                         </div>
-                        <span className="text-gray-text font-medium">{localizedName}</span>
-                      </div>
-                      <div className="flex items-center space-x-3">
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
-                          <div 
-                            className="bg-gradient-to-r from-coral to-teal h-2 rounded-full transition-all duration-500 ease-out"
-                            style={{ width: `${typeof item.percentage === 'number' ? Math.min(Math.max(item.percentage, 0), 100) : 0}%` }}
-                          />
+                        <div className="flex items-center space-x-3">
+                          <div className="w-24 bg-gray-200 rounded-full h-2">
+                            <div 
+                              className="bg-gradient-to-r from-coral to-teal h-2 rounded-full transition-all duration-500 ease-out"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-semibold text-dark-blue w-10 text-right">
+                            {percentage}%
+                          </span>
                         </div>
-                        <span className="text-sm font-semibold text-dark-blue w-10 text-right">
-                          {typeof item.percentage === 'number' ? item.percentage : 0}%
-                        </span>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-) : (
-              <div className="text-center text-gray-500 py-4">
-                <p>성격 분석 데이터를 불러오는 중...</p>
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
         </div>
 
