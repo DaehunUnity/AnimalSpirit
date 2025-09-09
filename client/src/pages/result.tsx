@@ -75,6 +75,13 @@ function Result({ animalId: propAnimalId, quizResult, onRestartQuiz }: ResultPro
   const otherAnimals = allAnimals?.filter((a) => a.id !== animal.id) || [];
 
 
+  // Debug logging
+  console.log('[DEBUG] Result component:', {
+    quizResult,
+    matchScore: quizResult?.matchScore,
+    finalMatchScore: quizResult?.matchScore || 95
+  });
+
   return (
     <main className="max-w-4xl mx-auto px-4 py-8">
       <ResultCard 

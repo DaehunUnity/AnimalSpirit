@@ -24,6 +24,14 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
   const [, setLocation] = useLocation();
   const { language } = useLanguage();
   const t = useTranslation(language);
+  
+  // Temporary debug logging
+  console.log('[DEBUG] ResultCard props:', {
+    matchScore,
+    breakdown,
+    breakdownLength: breakdown?.length,
+    breakdownType: typeof breakdown
+  });
 
 
   // Get localized animal data
@@ -74,7 +82,7 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
           <div className="flex justify-center items-center space-x-6 text-sm">
             <div className="text-center">
               <div className="font-semibold">{t.matchScore}</div>
-              <div className="opacity-75">{matchScore}%</div>
+              <div className="opacity-75">{matchScore}% (Type: {typeof matchScore}, Value: {JSON.stringify(matchScore)})</div>
             </div>
             <div className="text-center">
               <div className="font-semibold">{t.personality}</div>
@@ -150,10 +158,15 @@ export default function ResultCard({ animal, matchScore, breakdown, onRestartQui
             </h4>
             
             
-            {breakdown && Array.isArray(breakdown) && breakdown.length > 0 ? (
+            <div style={{color: 'red', fontSize: '12px', marginBottom: '10px'}}>
+              DEBUG: breakdown={JSON.stringify(breakdown)}, isArray={Array.isArray(breakdown)}, length={breakdown?.length}
+            </div>
+            {true ? ( // Temporarily force to show
               <div className="space-y-3">
                 {breakdown.map((item, index) => {
+                  console.log(`[DEBUG] Processing breakdown item ${index}:`, item);
                   if (!item || !item.animal || !item.animal.name) {
+                    console.log(`[DEBUG] Item ${index} failed validation:`, { item, hasAnimal: !!item?.animal, hasName: !!item?.animal?.name });
                     return null;
                   }
                   

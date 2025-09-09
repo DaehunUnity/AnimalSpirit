@@ -48,6 +48,12 @@ export default function Quiz({ onRestartQuiz }: QuizProps) {
       
       try {
         const data = JSON.parse(responseText);
+        console.log('[DEBUG] Quiz result received:', {
+          matchScore: data.matchScore,
+          breakdown: data.breakdown,
+          animal: data.animal?.name
+        });
+        
         return data;
       } catch (parseError) {
         console.error('Failed to parse API response:', parseError);

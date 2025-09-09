@@ -133,6 +133,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Use actual calculated score, but cap it at 100%
       const matchScore = Math.min(Math.round(bestMatch.score), 100);
+      
+      // Temporary debug logging
+      console.log('[DEBUG] Match calculation:', {
+        bestMatchScore: bestMatch.score,
+        finalMatchScore: matchScore,
+        topAnimalsScores: topAnimals.map(a => ({ name: a.animal.name, score: a.score })),
+        totalScore: topAnimals.reduce((sum, item) => sum + item.score, 0)
+      });
 
 
       // Ensure breakdown is always valid before sending
