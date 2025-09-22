@@ -25,6 +25,25 @@
   [headers.values]
     Content-Type = "text/plain"
 
+# Static files should be served directly (not redirected)
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap.xml"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
+  force = false
+
+[[redirects]]
+  from = "/ads.txt"
+  to = "/ads.txt"
+  status = 200
+  force = false
+
 # Catch-all redirect for SPA routing
 [[redirects]]
   from = "/*"
