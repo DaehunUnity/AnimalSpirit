@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://animal-spirit-test.netlify.app/sitemap.xml
+Sitemap: https://animalspirits.netlify.app/sitemap.xml
 
 # AdSense
 User-agent: Mediapartners-Google
