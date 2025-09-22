@@ -31,12 +31,12 @@ function Result({ animalId: propAnimalId, quizResult, onRestartQuiz }: ResultPro
   const t = useTranslation(language);
 
   const { data: animal, isLoading: isLoadingAnimal } = useQuery<Animal>({
-    queryKey: ["/api/animals", animalId],
+    queryKey: ["/.netlify/functions/api/animals", animalId],
     enabled: !!animalId,
   });
 
   const { data: allAnimals, isLoading: isLoadingAnimals } = useQuery<Animal[]>({
-    queryKey: ["/api/animals"],
+    queryKey: ["/.netlify/functions/api/animals"],
   });
 
   if (isLoadingAnimal || isLoadingAnimals) {

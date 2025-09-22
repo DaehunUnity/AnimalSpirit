@@ -36,12 +36,12 @@ export default function Quiz({ onRestartQuiz }: QuizProps) {
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
   const { data: questions, isLoading } = useQuery<Question[]>({
-    queryKey: ["/api/questions"],
+    queryKey: ["/.netlify/functions/api/questions"],
   });
 
   const calculateMutation = useMutation({
     mutationFn: async (quizAnswers: QuizAnswer[]) => {
-      const response = await apiRequest("POST", "/api/calculate-match", {
+      const response = await apiRequest("POST", "/.netlify/functions/api/calculate-match", {
         answers: quizAnswers,
       });
       const responseText = await response.text();
